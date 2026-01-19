@@ -1,0 +1,7 @@
+{
+  "name": "Copy of MolyRemote 3D",
+  "description": "A high-end 3D molecule viewer with real-time remote control capabilities via mobile device orientation sensors.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
