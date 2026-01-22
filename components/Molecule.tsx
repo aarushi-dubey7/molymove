@@ -57,15 +57,16 @@ const Molecule: React.FC<MoleculeProps> = ({ data, remoteOrientation }) => {
           const end = new THREE.Vector3(...bond.end);
           const distance = start.distanceTo(end);
           const center = start.clone().lerp(end, 0.5);
-          
+
+          const direction = end.clone().sub(start).normalize();
+          const quaternion = new THREE.Quaternion();
+          quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction);
+
           return (
             <mesh
               key={`bond-${idx}`}
               position={center}
-              onUpdate={(self) => {
-                self.lookAt(end);
-                self.rotateX(Math.PI / 2);
-              }}
+              quaternion={quaternion}
             >
               <cylinderGeometry args={[0.08, 0.08, distance, 12]} />
               <meshStandardMaterial color="#888888" roughness={0.3} metalness={0.2} />

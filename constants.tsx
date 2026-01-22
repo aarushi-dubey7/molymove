@@ -11,12 +11,12 @@ export const MOLECULES: Record<string, MoleculeData> = {
     formula: 'H2O',
     atoms: [
       { element: 'O', position: [0, 0, 0], color: '#ff4d4d', size: 0.6 },
-      { element: 'H', position: [0.8, 0.6, 0], color: '#ffffff', size: 0.35 },
-      { element: 'H', position: [-0.8, 0.6, 0], color: '#ffffff', size: 0.35 },
+      { element: 'H', position: [0.96, 0.72, 0], color: '#ffffff', size: 0.35 },
+      { element: 'H', position: [-0.96, 0.72, 0], color: '#ffffff', size: 0.35 },
     ],
     bonds: [
-      { start: [0, 0, 0], end: [0.8, 0.6, 0] },
-      { start: [0, 0, 0], end: [-0.8, 0.6, 0] },
+      { start: [0, 0, 0], end: [0.96, 0.72, 0] },
+      { start: [0, 0, 0], end: [-0.96, 0.72, 0] },
     ],
   },
   methane: {
@@ -40,7 +40,7 @@ export const MOLECULES: Record<string, MoleculeData> = {
     name: 'Caffeine',
     formula: 'C8H10N4O2',
     atoms: [
-        // simplified model for visualization performance
+      // simplified model for visualization performance
       { element: 'N', position: [0, 1.4, 0], color: '#3366ff', size: 0.4 },
       { element: 'C', position: [1.2, 0.7, 0], color: '#444444', size: 0.45 },
       { element: 'C', position: [1.2, -0.7, 0], color: '#444444', size: 0.45 },
