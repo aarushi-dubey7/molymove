@@ -1,7 +1,7 @@
 
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Sphere, Cylinder, Float, Text, MeshDistortMaterial } from '@react-three/drei';
+import { Sphere, Cylinder, Float, Text, MeshDistortMaterial, Plane } from '@react-three/drei';
 import * as THREE from 'three';
 import { MoleculeData, OrientationData } from '../types';
 
@@ -12,6 +12,11 @@ interface MoleculeProps {
 
 const Molecule: React.FC<MoleculeProps> = ({ data, remoteOrientation }) => {
   const groupRef = useRef<THREE.Group>(null);
+  
+  // Orientation indicator configuration (in Three.js world units)
+  const INDICATOR_SIZE = 3; // Width and height of the plane
+  const INDICATOR_Z_POSITION = 2; // Distance from molecule center on Z-axis
+  const INDICATOR_OPACITY = 0.15; // Transparency level (0-1)
 
   useFrame((state) => {
     if (!groupRef.current) return;
@@ -35,6 +40,16 @@ const Molecule: React.FC<MoleculeProps> = ({ data, remoteOrientation }) => {
   return (
     <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
       <group ref={groupRef}>
+        {/* Orientation Indicator - Shows the front face of the molecule */}
+        <Plane args={[INDICATOR_SIZE, INDICATOR_SIZE]} position={[0, 0, INDICATOR_Z_POSITION]}>
+          <meshBasicMaterial 
+            color="#3b82f6" 
+            transparent 
+            opacity={INDICATOR_OPACITY}
+            side={THREE.DoubleSide}
+          />
+        </Plane>
+
         {data.atoms.map((atom, idx) => (
           <group key={`atom-${idx}`} position={atom.position}>
             <Sphere args={[atom.size, 32, 32]}>
