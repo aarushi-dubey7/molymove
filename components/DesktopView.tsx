@@ -8,6 +8,7 @@ import { Smartphone, Info, RefreshCw, Layers } from 'lucide-react';
 import { MoleculeData, OrientationData, PeerMessage } from '../types';
 import { MOLECULES } from '../constants';
 import Molecule from './Molecule';
+import OrientationGizmo from './OrientationGizmo';
 import { getMoleculeInfo } from '../services/geminiService';
 
 const DesktopView: React.FC = () => {
@@ -59,21 +60,30 @@ const DesktopView: React.FC = () => {
   return (
     <div className="relative w-full h-full bg-neutral-950 flex">
       {/* 3D Scene */}
-      <div className="flex-grow h-full">
+      <div className="flex-grow h-full relative">
         <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
           <color attach="background" args={['#050505']} />
           <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
           <ambientLight intensity={0.5} />
           <pointLight position={[10, 10, 10]} intensity={1} />
           <spotLight position={[-10, 10, 10]} angle={0.15} penumbra={1} intensity={1} />
-          
+
           <Molecule data={currentMolecule} remoteOrientation={remoteOrientation} />
-          
+
           <ContactShadows opacity={0.4} scale={10} blur={2.4} far={10} resolution={256} color="#000000" />
           <Environment preset="city" />
           {/* Using spread with any to bypass OrbitControls type check for enablePan */}
           <OrbitControls makeDefault {...({ enablePan: false } as any)} />
         </Canvas>
+
+        {/* Orientation Gizmo */}
+        <div className="absolute bottom-8 left-8 w-32 h-32 pointer-events-none z-10">
+          <Canvas camera={{ position: [0, 0, 4], fov: 45 }} dpr={window.devicePixelRatio}>
+            <ambientLight intensity={1} />
+            <pointLight position={[10, 10, 10]} intensity={1} />
+            <OrientationGizmo remoteOrientation={remoteOrientation} />
+          </Canvas>
+        </div>
       </div>
 
       {/* Sidebar UI */}
@@ -95,11 +105,10 @@ const DesktopView: React.FC = () => {
               <button
                 key={mol.name}
                 onClick={() => setCurrentMolecule(mol)}
-                className={`p-3 rounded-xl text-sm transition-all ${
-                  currentMolecule.name === mol.name 
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' 
+                className={`p-3 rounded-xl text-sm transition-all ${currentMolecule.name === mol.name
+                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
                   : 'bg-white/5 hover:bg-white/10 text-neutral-300'
-                }`}
+                  }`}
               >
                 {mol.name}
               </button>
@@ -127,7 +136,7 @@ const DesktopView: React.FC = () => {
             <Smartphone size={20} />
             <h2 className="text-lg font-bold">Remote Controller</h2>
           </div>
-          
+
           {peerId ? (
             <div className="flex flex-col items-center">
               <div className="bg-white p-3 rounded-xl mb-4 shadow-xl">

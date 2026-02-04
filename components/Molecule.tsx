@@ -19,13 +19,16 @@ const Molecule: React.FC<MoleculeProps> = ({ data, remoteOrientation }) => {
     if (remoteOrientation) {
       // Smoothly interpolate to remote orientation
       // Convert degrees to radians
+      // Convert target Euler to Quaternion
       const targetRotationX = THREE.MathUtils.degToRad(remoteOrientation.beta);
       const targetRotationY = THREE.MathUtils.degToRad(remoteOrientation.gamma);
       const targetRotationZ = THREE.MathUtils.degToRad(remoteOrientation.alpha);
 
-      groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetRotationX, 0.1);
-      groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, targetRotationY, 0.1);
-      groupRef.current.rotation.z = THREE.MathUtils.lerp(groupRef.current.rotation.z, targetRotationZ, 0.1);
+      const targetEuler = new THREE.Euler(targetRotationX, targetRotationY, targetRotationZ);
+      const targetQuaternion = new THREE.Quaternion().setFromEuler(targetEuler);
+
+      // Smoothly slerp (spherical interpolation) to target
+      groupRef.current.quaternion.slerp(targetQuaternion, 0.05);
     } else {
       // Default slow idle rotation
       groupRef.current.rotation.y += 0.005;
@@ -33,7 +36,7 @@ const Molecule: React.FC<MoleculeProps> = ({ data, remoteOrientation }) => {
   });
 
   return (
-    <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
+    <Float speed={2} rotationIntensity={0} floatIntensity={0.5}>
       <group ref={groupRef}>
         {data.atoms.map((atom, idx) => (
           <group key={`atom-${idx}`} position={atom.position}>
