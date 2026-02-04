@@ -32,19 +32,14 @@ const Molecule: React.FC<MoleculeProps> = ({ data, remoteOrientation }) => {
       groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetRotationX, 0.1);
       groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, targetRotationY, 0.1);
       groupRef.current.rotation.z = THREE.MathUtils.lerp(groupRef.current.rotation.z, targetRotationZ, 0.1);
-      
-      // Sync indicator rotation with molecule
-      if (indicatorRef.current) {
-        indicatorRef.current.rotation.copy(groupRef.current.rotation);
-      }
     } else {
       // Default slow idle rotation
       groupRef.current.rotation.y += 0.005;
-      
-      // Sync indicator rotation with molecule
-      if (indicatorRef.current) {
-        indicatorRef.current.rotation.copy(groupRef.current.rotation);
-      }
+    }
+    
+    // Sync indicator rotation with molecule
+    if (indicatorRef.current) {
+      indicatorRef.current.rotation.copy(groupRef.current.rotation);
     }
   });
 
